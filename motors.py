@@ -7,7 +7,7 @@ Libraries:
 """
 
 import time
-import serial_bus_servo_controller as sbsc
+from lib import serial_bus_servo_controller as sbsc
 
 # global constants
 port = "COM3"
