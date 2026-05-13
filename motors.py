@@ -35,22 +35,22 @@ index_mcp_abduction = 16
 
 # global servo limits, experimentally determined values (REPLACE THESE)
 servo_limits = {
-    1:  (490, 510),
-    2:  (490, 510),
-    3:  (490, 510),
-    4:  (490, 510),
-    5:  (490, 510),
-    6:  (490, 510),
-    7:  (490, 510),
-    8:  (490, 510),
-    9:  (490, 510),
-    10: (490, 510),
+    1:  (150, 675),
+    2:  (240, 605),
+    3:  (220, 730),
+    4:  (500, 880),
+    5:  (350, 650),
+    6:  (350, 650),
+    7:  (210, 560),
+    8:  (220, 700),
+    9:  (300, 760),
+    10: (490, 660),
     11: (490, 510),
-    12: (490, 510),
+    12: (380, 650),
     13: (490, 510),
     14: (490, 510),
     15: (490, 510),
-    16: (490, 510),
+    16: (350, 720),
 }
 
 # global variable to store servo controller object
@@ -81,11 +81,7 @@ def constrain_servo_position(servo_id, position):
 def move_servo(servo_id, position, move_time=default_move_time):
     safe_position = constrain_servo_position(servo_id, position)
 
-    controller.cmd_servo_move(
-        [servo_id],
-        [safe_position],
-        move_time
-    )
+    controller.cmd_servo_move([servo_id], [safe_position], move_time)
 
 # function to move multiple servos using a dictionary of servo ids and positions
 def move_servos(servo_positions, move_time=default_move_time):
@@ -96,11 +92,7 @@ def move_servos(servo_positions, move_time=default_move_time):
         servo_ids.append(servo_id)
         safe_positions.append(constrain_servo_position(servo_id, position))
 
-    controller.cmd_servo_move(
-        servo_ids,
-        safe_positions,
-        move_time
-    )
+    controller.cmd_servo_move(servo_ids, safe_positions, move_time)
 
 # function to move all servos to the neutral position
 def neutral_all(move_time=default_move_time):
@@ -158,11 +150,11 @@ def move_thumb(cmc_abduction, cmc_flexion, mp_flexion, ip_flexion, move_time=def
 
 # function to move the hand to the open hand pose
 def open_hand(move_time=default_move_time):
-    move_index_finger(500, 500, 500, move_time)
-    move_middle_finger(500, 500, 500, move_time)
-    move_ring_finger(500, 500, 500, move_time)
-    move_pinky_finger(500, 500, 500, move_time)
-    move_thumb(500, 500, 500, 500, move_time)
+    move_index_finger(525, 525, 555, move_time)
+    move_middle_finger(500, 490, 435, move_time)
+    move_ring_finger(480, 490, 575, move_time)
+    move_pinky_finger(500, 490, 425, move_time)
+    move_thumb(500, 480, 575, 575, move_time)
 
 # function to move the hand to the power grasp pose
 def power_grasp(move_time=default_move_time):
