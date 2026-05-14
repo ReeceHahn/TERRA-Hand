@@ -16,41 +16,41 @@ number_of_servos = 16
 default_move_time = 2000
 
 # servo index constants
-middle_mcp_flexion = 1
-middle_pip_dip_flexion = 2
-thumb_cmc_flexion = 3
-thumb_cmc_abduction = 4
-middle_mcp_abduction = 5
-ring_mcp_abduction = 6
-pinky_pip_dip_flexion = 7
-pinky_mcp_flexion = 8
-index_mcp_flexion = 9
-ring_pip_dip_flexion = 10
-ring_mcp_flexion = 11
-pinky_mcp_abduction = 12
-index_pip_dip_flexion = 13
-thumb_mp_flexion = 14
-thumb_ip_flexion = 15
-index_mcp_abduction = 16
+middle_mcp_flexion = 1 # 300 to 660
+middle_pip_dip_flexion = 2 # 300 to 600
+thumb_cmc_flexion = 3 # 300 to 720
+thumb_cmc_abduction = 4 # 400 to 650
+middle_mcp_abduction = 5 # 350 to 650
+ring_mcp_abduction = 6 # 350 to 650
+pinky_pip_dip_flexion = 7 # 280 to 570
+pinky_mcp_flexion = 8 # 280 to 610
+index_mcp_flexion = 9 # 340 to 680
+ring_pip_dip_flexion = 10 # 440 to 750
+ring_mcp_flexion = 11 # 360 to 660
+pinky_mcp_abduction = 12 # 350 to 650
+index_pip_dip_flexion = 13 # 400 to 700
+thumb_mp_flexion = 14 # 390 to 780
+thumb_ip_flexion = 15 # 400 to 680
+index_mcp_abduction = 16 # 350 to 650
 
-# global servo limits, experimentally determined values (REPLACE THESE)
+# global servo limits, experimentally determined values, since the spool design is currently limiting these are quite conservative until a superior design is made
 servo_limits = {
-    1:  (150, 675),
-    2:  (240, 605),
-    3:  (220, 730),
-    4:  (500, 880),
+    1:  (300, 660),
+    2:  (300, 600),
+    3:  (300, 720),
+    4:  (430, 740),
     5:  (350, 650),
     6:  (350, 650),
-    7:  (210, 560),
-    8:  (220, 700),
-    9:  (300, 760),
-    10: (490, 660),
-    11: (490, 510),
-    12: (380, 650),
-    13: (490, 510),
-    14: (490, 510),
-    15: (490, 510),
-    16: (350, 720),
+    7:  (280, 570),
+    8:  (280, 610),
+    9:  (340, 680),
+    10: (440, 750),
+    11: (360, 660),
+    12: (350, 650),
+    13: (400, 700),
+    14: (390, 780),
+    15: (400, 680),
+    16: (350, 650),
 }
 
 # global variable to store servo controller object
@@ -103,10 +103,6 @@ def neutral_all(move_time=default_move_time):
 
     move_servos(servo_positions, move_time)
 
-# emergency stop function, currently returns all servos to neutral open hand position
-def emergency_stop():
-    open_hand()
-
 # function to move the index finger
 def move_index_finger(mcp_abduction, mcp_flexion, pip_dip_flexion, move_time=default_move_time):
     move_servos({
@@ -148,39 +144,202 @@ def move_thumb(cmc_abduction, cmc_flexion, mp_flexion, ip_flexion, move_time=def
         thumb_ip_flexion: ip_flexion,
     }, move_time)
 
-# function to move the hand to the open hand pose
 def open_hand(move_time=default_move_time):
-    move_index_finger(525, 525, 555, move_time)
-    move_middle_finger(500, 490, 435, move_time)
-    move_ring_finger(480, 490, 575, move_time)
-    move_pinky_finger(500, 490, 425, move_time)
-    move_thumb(500, 480, 575, 575, move_time)
+    move_servos({
+        index_mcp_abduction: 560,
+        index_mcp_flexion: 420,
+        index_pip_dip_flexion: 565,
+
+        middle_mcp_abduction: 590,
+        middle_mcp_flexion: 510,
+        middle_pip_dip_flexion: 415,
+
+        ring_mcp_abduction: 490,
+        ring_mcp_flexion: 490,
+        ring_pip_dip_flexion: 630,
+
+        pinky_mcp_abduction: 475,
+        pinky_mcp_flexion: 470,
+        pinky_pip_dip_flexion: 425,
+        
+        thumb_cmc_abduction: 555,
+        thumb_cmc_flexion: 565,
+        thumb_mp_flexion: 670,
+        thumb_ip_flexion: 610,
+    }, move_time)
 
 # function to move the hand to the power grasp pose
 def power_grasp(move_time=default_move_time):
-    move_index_finger(500, 500, 500, move_time)
-    move_middle_finger(500, 500, 500, move_time)
-    move_ring_finger(500, 500, 500, move_time)
-    move_pinky_finger(500, 500, 500, move_time)
-    move_thumb(500, 500, 500, 500, move_time)
+    move_servos({
+        index_mcp_abduction: 615,
+        index_mcp_flexion: 640,
+        index_pip_dip_flexion: 650,
 
-# function to move the hand to the pinch pose
-def pinch(move_time=default_move_time):
-    move_index_finger(500, 500, 500, move_time)
-    move_middle_finger(500, 500, 500, move_time)
-    move_ring_finger(500, 500, 500, move_time)
-    move_pinky_finger(500, 500, 500, move_time)
-    move_thumb(500, 500, 500, 500, move_time)
+        middle_mcp_abduction: 590,
+        middle_mcp_flexion: 350,
+        middle_pip_dip_flexion: 300,
 
-# function to move the hand to the fist pose
-def fist(move_time=default_move_time):
-    move_index_finger(500, 500, 500, move_time)
-    move_middle_finger(500, 500, 500, move_time)
-    move_ring_finger(500, 500, 500, move_time)
-    move_pinky_finger(500, 500, 500, move_time)
-    move_thumb(500, 500, 500, 500, move_time)
+        ring_mcp_abduction: 490,
+        ring_mcp_flexion: 660,
+        ring_pip_dip_flexion: 740,
 
-# function to unload torque from all servos if supported by the controller
+        pinky_mcp_abduction: 440,
+        pinky_mcp_flexion: 300,
+        pinky_pip_dip_flexion: 300,
+        
+        thumb_cmc_abduction: 550,
+        thumb_cmc_flexion: 575,
+        thumb_mp_flexion: 760,
+        thumb_ip_flexion: 470,
+    }, move_time)
+
+# function to move the hand to the single finger pinch pose
+def single_finger_pinch(move_time=default_move_time):
+    move_servos({
+        index_mcp_abduction: 560,
+        index_mcp_flexion: 670,
+        index_pip_dip_flexion: 690,
+
+        middle_mcp_abduction: 590,
+        middle_mcp_flexion: 510,
+        middle_pip_dip_flexion: 415,
+
+        ring_mcp_abduction: 490,
+        ring_mcp_flexion: 490,
+        ring_pip_dip_flexion: 630,
+
+        pinky_mcp_abduction: 475,
+        pinky_mcp_flexion: 470,
+        pinky_pip_dip_flexion: 425,
+        
+        thumb_cmc_abduction: 720,
+        thumb_cmc_flexion: 445,
+        thumb_mp_flexion: 780,
+        thumb_ip_flexion: 470,
+    }, move_time)
+
+# function to move the hand to the double finger pinch pose
+def double_finger_pinch(move_time=default_move_time):
+    move_servos({
+        index_mcp_abduction: 615,
+        index_mcp_flexion: 670,
+        index_pip_dip_flexion: 690,
+
+        middle_mcp_abduction: 590,
+        middle_mcp_flexion: 310,
+        middle_pip_dip_flexion: 300,
+
+        ring_mcp_abduction: 490,
+        ring_mcp_flexion: 490,
+        ring_pip_dip_flexion: 630,
+
+        pinky_mcp_abduction: 475,
+        pinky_mcp_flexion: 470,
+        pinky_pip_dip_flexion: 425,
+        
+        thumb_cmc_abduction: 700,
+        thumb_cmc_flexion: 400,
+        thumb_mp_flexion: 760,
+        thumb_ip_flexion: 470,
+    }, move_time)
+
+def finger_tip_sequence_1(move_time=default_move_time):
+    move_servos({
+        index_mcp_abduction: 560,
+        index_mcp_flexion: 670,
+        index_pip_dip_flexion: 690,
+
+        middle_mcp_abduction: 590,
+        middle_mcp_flexion: 510,
+        middle_pip_dip_flexion: 415,
+
+        ring_mcp_abduction: 490,
+        ring_mcp_flexion: 490,
+        ring_pip_dip_flexion: 630,
+
+        pinky_mcp_abduction: 475,
+        pinky_mcp_flexion: 470,
+        pinky_pip_dip_flexion: 425,
+        
+        thumb_cmc_abduction: 720,
+        thumb_cmc_flexion: 445,
+        thumb_mp_flexion: 780,
+        thumb_ip_flexion: 470,
+    }, move_time)
+
+def finger_tip_sequence_2(move_time=default_move_time):
+    move_servos({
+        index_mcp_abduction: 560,
+        index_mcp_flexion: 420,
+        index_pip_dip_flexion: 565,
+
+        middle_mcp_abduction: 590,
+        middle_mcp_flexion: 310,
+        middle_pip_dip_flexion: 310,
+
+        ring_mcp_abduction: 490,
+        ring_mcp_flexion: 490,
+        ring_pip_dip_flexion: 630,
+
+        pinky_mcp_abduction: 475,
+        pinky_mcp_flexion: 470,
+        pinky_pip_dip_flexion: 425,
+        
+        thumb_cmc_abduction: 695,
+        thumb_cmc_flexion: 310,
+        thumb_mp_flexion: 705,
+        thumb_ip_flexion: 470,
+    }, move_time)
+
+def finger_tip_sequence_3(move_time=default_move_time):
+    move_servos({
+        index_mcp_abduction: 560,
+        index_mcp_flexion: 420,
+        index_pip_dip_flexion: 565,
+
+        middle_mcp_abduction: 590,
+        middle_mcp_flexion: 510,
+        middle_pip_dip_flexion: 415,
+
+        ring_mcp_abduction: 490,
+        ring_mcp_flexion: 650,
+        ring_pip_dip_flexion: 740,
+
+        pinky_mcp_abduction: 475,
+        pinky_mcp_flexion: 470,
+        pinky_pip_dip_flexion: 425,
+        
+        thumb_cmc_abduction: 620,
+        thumb_cmc_flexion: 310,
+        thumb_mp_flexion: 705,
+        thumb_ip_flexion: 505,
+    }, move_time)
+
+def finger_tip_sequence_4(move_time=default_move_time):
+    move_servos({
+        index_mcp_abduction: 560,
+        index_mcp_flexion: 420,
+        index_pip_dip_flexion: 565,
+
+        middle_mcp_abduction: 590,
+        middle_mcp_flexion: 510,
+        middle_pip_dip_flexion: 415,
+
+        ring_mcp_abduction: 490,
+        ring_mcp_flexion: 490,
+        ring_pip_dip_flexion: 630,
+
+        pinky_mcp_abduction: 475,
+        pinky_mcp_flexion: 280,
+        pinky_pip_dip_flexion: 280,
+        
+        thumb_cmc_abduction: 575,
+        thumb_cmc_flexion: 330,
+        thumb_mp_flexion: 685,
+        thumb_ip_flexion: 570,
+    }, move_time)
+
+# function to unload torque from all servos
 def unload_all():
     servo_ids = []
 
@@ -188,3 +347,22 @@ def unload_all():
         servo_ids.append(servo_id)
 
     controller.cmd_mult_servo_unload(servo_ids)
+
+# test example to see the current draw of 2 motors simul operation, gradually increase until confident all 16 can operate at once
+if __name__ == "__main__":
+
+    # initialise motor controller connection
+    motors_setup()
+
+    # test simultaneous movement of two servos
+    move_servos({
+        index_mcp_flexion: 600,
+        middle_mcp_flexion: 600,
+    }, 2000)
+
+    time.sleep(2)
+
+    move_servos({
+        index_mcp_flexion: 400,
+        middle_mcp_flexion: 400,
+    }, 2000)
